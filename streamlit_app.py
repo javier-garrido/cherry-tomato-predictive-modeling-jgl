@@ -181,6 +181,7 @@ with tab3:
     st.subheader("Upload CSV File")
     st.markdown("""
     Upload a **CSV** file. It must contain two columns named `T` and `RH`, with daily data on temperature (T) and relative humidity (RH) starting from day 0.
+    Remove the CSV file to simulate a different scenario.
     """)
     archivo_csv = st.file_uploader("Select your CSV file", type=['csv'])
     
