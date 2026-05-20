@@ -1,6 +1,6 @@
 # 🍅 Cherry Tomato Quality and Shelf Life Predictive Modeling
 
-You can use the app directly in your web browser by clicking [here](cherry-tomato-predictive-modeling-jgl.streamlit.app).
+You can use the app directly in your web browser by clicking [here](https://cherry-tomato-predictive-modeling-jgl.streamlit.app/).
 
 ### How to run it on your own machine
 
