@@ -126,7 +126,7 @@ time_col = 't'
 
 
 # DATOS METIDOS POR EL USUARIO
-st.write("Introduce environmental data of the test (day 0 represents initial state)")
+st.write("Introduce environmental data of the test (day 0 represents initial state).")
 
 # Variable para almacenar el dataframe final independientemente del método elegido
 df_final = None
@@ -212,7 +212,7 @@ with tab3:
 # Si el usuario ha generado el dataframe por cualquiera de las 3 vías:
 if df_final is not None:
     st.divider()        # Línea separadora
-    st.subheader("📊 Conjunto de Datos Generado")
+    st.subheader("📊 Generated Dataset")
     
     # Calculamos la variable VPD aplicando la función vectorizada a las columnas
     df_final['VPD'] = calcular_VPD(df_final['T'], df_final['RH'])
