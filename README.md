@@ -1,4 +1,4 @@
-# 🍅 Cherry Tomato Quality and Shelf Life Predictive Modeling Simulator
+# 🍅 Cherry Tomato Quality and Shelf Life Predictive Modeling Simulator: Digital Twin
 
 You can use the Simulator directly in your web browser by clicking <a href="https://cherry-tomato-predictive-modeling-jgl.streamlit.app/" target="_blank" title="Go to the Simulator">here</a>.
 
