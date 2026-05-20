@@ -297,7 +297,7 @@ if df_final is not None:
         if target == 'WL':
             # SUMA ACUMULATIVA DE DELTAS PREDICHOS
             y_pred_deltas = model_wl.predict(X_test)        # Predicción (VAL) -> Son Deltas
-            y_pred_deltas = np.where(y_pred_deltas <= 0, 0.6, y_pred_deltas)     # Deltas positivos
+            y_pred_deltas = np.where(y_pred_deltas <= 0.3, 0.3, y_pred_deltas)     # Deltas positivos
 
             # Recuperamos el t_target para ordenar cronológicamente, en un Dataframe temporal
             t_target = X_step_limpio['t_step_1'].values
@@ -315,7 +315,7 @@ if df_final is not None:
         elif target == 'DI':
             # SUMA ACUMULATIVA DE DELTAS PREDICHOS
             y_pred_deltas = model_di.predict(X_test)        # Predicción (VAL) -> Son Deltas
-            y_pred_deltas = np.where(y_pred_deltas <= 0, 0.3, y_pred_deltas)     # Deltas positivos
+            y_pred_deltas = np.where(y_pred_deltas <= 0.6, 0.6, y_pred_deltas)     # Deltas positivos
 
             # Recuperamos el t_target para ordenar cronológicamente, en un Dataframe temporal
             t_target = X_step_limpio['t_step_1'].values
@@ -362,7 +362,7 @@ if df_final is not None:
             
             # PREDECIMOS USANDO LA MATRIZ CON PREDICCIONES DE WL Y DI
             y_pred = model_rsl.predict(X_test_sim_limpio)
-            for i in range(1, len(y_pred)): y_pred[i] = y_pred[i-1] - 0.5 if y_pred[i] >= y_pred[i-1] else y_pred[i]    # Monotonía decreciente
+            for i in range(1, len(y_pred)): y_pred[i] = min(y_pred[i], y_pred[i-1] - 0.5)    # Monotonía decreciente
 
 
         # --- GUARDAR PREDICCIONES ---
