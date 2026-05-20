@@ -113,9 +113,9 @@ st.title("🍅 Simulator for the Quality and Shelf Life of Cherry Tomatoes: Digi
 MODELO = 'XGB'      # MODELO que utiliza la web
 @st.cache_resource
 def load_models():
-    model_wl = joblib.load(f'modelo_WL_web_{MODELO}.joblib')
-    model_di = joblib.load(f'modelo_DI_web_{MODELO}.joblib')
-    model_rsl = joblib.load(f'modelo_RSL_web_{MODELO}.joblib')
+    model_wl = joblib.load(f'models/modelo_WL_web_{MODELO}.joblib')
+    model_di = joblib.load(f'models/modelo_DI_web_{MODELO}.joblib')
+    model_rsl = joblib.load(f'models/modelo_RSL_web_{MODELO}.joblib')
     return model_wl, model_di, model_rsl
 
 model_wl, model_di, model_rsl = load_models()
