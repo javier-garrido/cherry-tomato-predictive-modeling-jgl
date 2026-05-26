@@ -103,7 +103,7 @@ def _suavizar_monotono(y_pred, tipo='creciente', suavizado=1.0):
     resultado = minimize(funcion_objetivo, x0, method='SLSQP', constraints=restricciones, options={'ftol': 1e-6})
     return resultado.x if resultado.success else y_pred
 
-def apply_global_monotony(df, factor_suavizado=10.0):
+def apply_global_monotony(df, factor_suavizado=7.0):
     df_clean = []
     
     # Agrupamos por cada configuración única de curva
@@ -117,6 +117,8 @@ def apply_global_monotony(df, factor_suavizado=10.0):
         # OPTIMIZACIÓN CUADRÁTICA
         y_originales = group['Pred'].values
         group['Pred'] = _suavizar_monotono(y_originales, tipo=tipo_tendencia, suavizado=factor_suavizado)
+        if target_name in ['WL', 'DI'] and not group.empty:
+            group.iloc[0, group.columns.get_loc('Pred')] = 0
         df_clean.append(group)
         
     return pd.concat(df_clean)
