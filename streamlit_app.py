@@ -82,6 +82,7 @@ def build_strict_matrices(df_group, target_col, input_cols, time_col='t', lag=3,
     return pd.DataFrame(X_rows, index=indices)
 
 # Aplicar monotonía a las predicciones
+"""
 def apply_global_monotony(df):
     df_clean = []
     
@@ -100,6 +101,45 @@ def apply_global_monotony(df):
         df_clean.append(group)
         
     return pd.concat(df_clean)
+"""
+# Aplicar monotonía mediante Whittaker-Henderson
+def _suavizar_monotono(y_pred, tipo='creciente', suavizado=1.0):
+    n = len(y_pred)
+    if n <= 2: return y_pred
+        
+    def funcion_objetivo(y_suave):
+        termino_ajuste = np.sum((y_suave - y_pred) ** 2)
+        termino_suave = suavizado * np.sum(np.diff(y_suave, n=2) ** 2)
+        return termino_ajuste + termino_suave
+
+    # Crecimiento mínimo
+    epsilon = 1e-4
+
+    if tipo == 'creciente': restricciones = {'type': 'ineq', 'fun': lambda y: np.diff(y) - epsilon}
+    else: restricciones = {'type': 'ineq', 'fun': lambda y: -np.diff(y) - epsilon}
+
+    # Minimizamos
+    x0 = np.copy(y_pred)
+    resultado = minimize(funcion_objetivo, x0, method='SLSQP', constraints=restricciones, options={'ftol': 1e-6})
+    return resultado.x if resultado.success else y_pred
+
+def apply_global_monotony(df, factor_suavizado=10.0):
+    df_clean = []
+    
+    # Agrupamos por cada configuración única de curva
+    for name, group in df.groupby(['Treatment', 'Target', 'Model', 'Lag', 'Max_Step', 'Scenario']):
+        group = group.sort_values('t_target').copy()
+        target_name = name[1]   # El nombre del Target actual
+        
+        # Configuramos si la serie debe subir o bajar
+        tipo_tendencia = 'creciente' if target_name in ['WL', 'DI'] else 'decreciente'
+        
+        # OPTIMIZACIÓN CUADRÁTICA
+        y_originales = group['Pred'].values
+        group['Pred'] = _suavizar_monotono(y_originales, tipo=tipo_tendencia, suavizado=factor_suavizado)
+        df_clean.append(group)
+        
+    return pd.concat(df_clean)
 
 
 
@@ -107,7 +147,7 @@ def apply_global_monotony(df):
 # CONFIGURACIÓN DE LA WEB
 # =======================
 st.set_page_config(page_title="Cherry Tomato Digital Twin", layout="wide")
-st.title("🍅 Simulator for the Quality and Shelf Life of Cherry Tomatoes: Digital Twin")
+st.title("🍅 Simulator for the Quality and Shelf Life of Cherry Tomatoes")
 
 # Cargar los modelos (se hace cache para no recargar en cada clic)
 MODELO = 'XGB'      # MODELO que utiliza la web
@@ -381,8 +421,8 @@ if df_final is not None:
     # Agrupamos todas las predicciones
     df_all_predictions = pd.concat(list_predictions, ignore_index=True)
 
-    # Aplicamos monotonía con regresión isotónica
-    #df_all_predictions = apply_global_monotony(df_all_predictions)     # Opcional
+    # Aplicamos monotonía
+    df_all_predictions = apply_global_monotony(df_all_predictions)     # Opcional
 
 
     # ==== MOSTRAR RESULTADOS ====
