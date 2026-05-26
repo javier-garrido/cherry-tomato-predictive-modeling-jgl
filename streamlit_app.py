@@ -106,9 +106,9 @@ def apply_global_monotony(df, factor_suavizado=10.0):
     df_clean = []
     
     # Agrupamos por cada configuración única de curva
-    for name, group in df.groupby(['Treatment', 'Target', 'Model', 'Lag', 'Max_Step', 'Scenario']):
+    for name, group in df.groupby(['Target']):
         group = group.sort_values('t_target').copy()
-        target_name = name[1]   # El nombre del Target actual
+        target_name = name   # El nombre del Target actual
         
         # Configuramos si la serie debe subir o bajar
         tipo_tendencia = 'creciente' if target_name in ['WL', 'DI'] else 'decreciente'
