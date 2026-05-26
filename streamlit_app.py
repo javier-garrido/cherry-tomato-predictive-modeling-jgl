@@ -90,7 +90,7 @@ def _suavizar_monotono(y_pred, tipo='creciente', suavizado=1.0):
     def funcion_objetivo(y_suave):
         termino_ajuste = np.sum((y_suave - y_pred) ** 2)
         termino_suave = suavizado * np.sum(np.diff(y_suave, n=2) ** 2)
-        return termino_ajuste + termino_suave
+        return float(termino_ajuste + termino_suave)
 
     # Crecimiento mínimo
     epsilon = 1e-4
