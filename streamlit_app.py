@@ -90,13 +90,13 @@ def _suavizar_monotono(y_pred, tipo='creciente', suavizado=1.0):
     def funcion_objetivo(y_suave):
         termino_ajuste = np.sum((y_suave - y_pred) ** 2)
         termino_suave = suavizado * np.sum(np.diff(y_suave, n=2) ** 2)
-        return float(termino_ajuste + termino_suave)
+        return termino_ajuste + termino_suave
 
     # Crecimiento mínimo
     epsilon = 1e-4
 
-    if tipo == 'creciente': restricciones = {'type': 'ineq', 'fun': lambda y: np.diff(y) - epsilon}
-    else: restricciones = {'type': 'ineq', 'fun': lambda y: -np.diff(y) - epsilon}
+    if tipo == 'creciente': restricciones = {'type': 'ineq', 'fun': lambda y: (np.diff(y) - epsilon).astype(np.float64)}
+    else: restricciones = {'type': 'ineq', 'fun': lambda y: (-np.diff(y) - epsilon).astype(np.float64)}
 
     # Minimizamos
     x0 = np.copy(y_pred)
