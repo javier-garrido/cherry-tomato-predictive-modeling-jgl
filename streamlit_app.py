@@ -90,7 +90,7 @@ def _suavizar_monotono(y_pred, tipo='creciente', suavizado=1.0):
     def funcion_objetivo(y_suave):
         termino_ajuste = np.sum((y_suave - y_pred) ** 2)
         termino_suave = suavizado * np.sum(np.diff(y_suave, n=2) ** 2)
-        return termino_ajuste + termino_suave
+        return np.float64(termino_ajuste + termino_suave)
 
     # Crecimiento mínimo
     epsilon = 1e-4
@@ -99,7 +99,7 @@ def _suavizar_monotono(y_pred, tipo='creciente', suavizado=1.0):
     else: restricciones = {'type': 'ineq', 'fun': lambda y: (-np.diff(y) - epsilon).astype(np.float64)}
 
     # Minimizamos
-    x0 = np.copy(y_pred)
+    x0 = np.copy(y_pred).astype(np.float64)
     resultado = minimize(funcion_objetivo, x0, method='SLSQP', constraints=restricciones, options={'ftol': 1e-6})
     return resultado.x if resultado.success else y_pred
 
