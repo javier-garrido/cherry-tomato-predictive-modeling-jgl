@@ -81,28 +81,7 @@ def build_strict_matrices(df_group, target_col, input_cols, time_col='t', lag=3,
         
     return pd.DataFrame(X_rows, index=indices)
 
-# Aplicar monotonía a las predicciones
-"""
-def apply_global_monotony(df):
-    df_clean = []
-    
-    # Agrupamos por cada configuración única de curva
-    # Un mismo target
-    for name, group in df.groupby(['Target']):
-        group = group.sort_values('t_target').copy()
-        target_name = name   # El nombre del Target actual
-        
-        # Configuramos si la serie debe subir (True) o bajar (False)
-        is_increasing = True if target_name in ['WL', 'DI'] else False
-        ir = IsotonicRegression(increasing=is_increasing, out_of_bounds='clip')
-        
-        # Aplicamos el filtro a la curva predicha
-        group['Pred'] = ir.fit_transform(group['t_target'].values, group['Pred'].values)
-        df_clean.append(group)
-        
-    return pd.concat(df_clean)
-"""
-# Aplicar monotonía mediante Whittaker-Henderson
+# Aplicar monotonía a las predicciones mediante Whittaker-Henderson
 def _suavizar_monotono(y_pred, tipo='creciente', suavizado=1.0):
     n = len(y_pred)
     if n <= 2: return y_pred
