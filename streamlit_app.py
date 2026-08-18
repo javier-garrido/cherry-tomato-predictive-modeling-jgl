@@ -132,7 +132,7 @@ st.set_page_config(page_title="Cherry Tomato Digital Twin", layout="wide")
 st.title("🍅 Simulator for the Quality and Shelf Life of Cherry Tomatoes")
 
 # Cargar los modelos (se hace cache para no recargar en cada clic)
-MODELO = 'XGB'      # MODELO que utiliza la web
+MODELO = 'RF'      # MODELO que utiliza la web
 @st.cache_resource
 def load_models():
     model_wl = joblib.load(f'models/modelo_WL_web_{MODELO}.joblib')
